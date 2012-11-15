@@ -14,23 +14,19 @@ if RUBY_VERSION < '1.9.0'
   end
 end
 
-START_LOW = 4
-START_COL = 3
-END_LOW = 129
 tweets = []
 answerlist = []
+session = GoogleSpreadsheet.login(USER, PASS)
+ws = session.spreadsheet_by_url(URL).worksheets[0]
 
 filehandle = open( "laststatus.txt" , "r")
 laststatus = filehandle.gets.to_i
 filehandle.close
 lastnum = laststatus.to_i
 
-session = GoogleSpreadsheet.login(USER, PASS)
-ws = session.spreadsheet_by_url(URL).worksheets[0]
-
 for i in START_LOW..END_LOW
   if ws[i, START_COL+2] == "1" then
-    #DO NOT LIST TWEET
+    #DO NOT LIST TWEET(it is local rule in sqbot prj)
   else
     tweets.push(ws[i, START_COL])
   end
@@ -43,8 +39,7 @@ Twitter.configure do |config|
   config.oauth_token_secret = OAUTH_TOEKN_SECRET
 end
 
-Twitter.mentions.each do |m|
-  #puts m.id.to_s + ":" + m.user.screen_name  + m.text
+Twitter.mentions.each do |m| #Search mention, find keyword from tweet list and reply that if it exist.
   statid = m.id.to_i
   if lastnum < statid then
     lastnum = statid
