@@ -3,6 +3,7 @@ piyosuke
 
 SQuBOK_BOT script
 
+
 Need account file named "sqbot_keys.rb" such as follows,
 
 <pre>
